@@ -144,10 +144,10 @@ def run(root, out):
     fold_path = root/"reports"/"hgb_cv"/"hgb_selected_cv.csv"
     chosen = json.loads(record_path.read_text(encoding="utf-8"))
     if chosen["params"] != PARAMS or chosen["use_history"] is not True or chosen["use_transit"] is not False or chosen["history_features"] != FEATURES:
-        raise ValueError("与 notebook 已保存配置不一致，未评分或导出。")
-    third = pd.read_csv(fold_path).loc[lambda x: x["折"].eq(3)]
+        raise ValueError("Configuration differs from the frozen notebook selection; scoring and export were not run.")
+    third = pd.read_csv(fold_path).loc[lambda x: x["fold"].eq(3)]
     if len(third)!=1 or int(third.iloc[0]["n"])!=1917:
-        raise ValueError("没有找到选定配置的第 3 折成绩。")
+        raise ValueError("Could not find the selected configuration on development fold 3.")
     ref = third.iloc[0]
     flats,ads,source=load(root)
     with threadpool_limits(limits=4):
@@ -185,11 +185,11 @@ def run(root, out):
          "pairs_with_lower_predicted_rent_with_parking":int((prices[:,0]<prices[:,1]).sum()),
          "csv_sha256":digest(dst),"csv_file":dst.name}}
     report.write_text(json.dumps(metrics,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    print(f"本地留出集：{hold['scored_n']:,}/{hold['window_n']:,} 条 | MedAE=A${hold['MedAE_AUD_per_week']:.2f}/周 | A$100 内={hold['within_100_fraction']:.2%} | R²={hold['r2']:.4f}")
-    print(f"最终训练：{nt:,} 条近期广告，另可使用 {len(past):,} 条截止日前历史记录。")
-    print(f"提交文件：{dst}（{len(sub):,} 行，3 列；已重新读取核验）")
-    print(f"留出报告：{report}")
-    print(f"有车位预测低于无车位：{metrics['final']['pairs_with_lower_predicted_rent_with_parking']} 行（如实记录，未事后修改预测）。")
+    print(f"Local holdout: {hold['scored_n']:,}/{hold['window_n']:,} ads | MedAE=A${hold['MedAE_AUD_per_week']:.2f}/week | within A$100={hold['within_100_fraction']:.2%} | R²={hold['r2']:.4f}")
+    print(f"Final training: {nt:,} recent ads; {len(past):,} historical ads available through the information cutoff.")
+    print(f"Submission file: {dst} ({len(sub):,} rows, 3 columns; verified after export)")
+    print(f"Holdout report: {report}")
+    print(f"Flats with a lower predicted rent with parking: {metrics['final']['pairs_with_lower_predicted_rent_with_parking']} (reported as predicted; no post-hoc adjustment).")
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
