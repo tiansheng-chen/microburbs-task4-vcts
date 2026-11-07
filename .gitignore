@@ -1,0 +1,21 @@
+# Public entry: opt in the required public files, not any data directory.
+/*
+!/.gitignore
+!/README.md
+!/requirements.txt
+!/rents_vcts.csv
+!/report.html
+!/pitch.mp4
+!/demo.mp4
+!/scripts/
+/scripts/*
+!/scripts/finalize_hgb.py
+!/reports/
+/reports/*
+!/reports/hgb_cv/
+!/reports/hgb_final/
+/reports/hgb_cv/*
+!/reports/hgb_cv/hgb_selected_config.json
+!/reports/hgb_cv/hgb_selected_cv.csv
+/reports/hgb_final/*
+!/reports/hgb_final/holdout_metrics.json

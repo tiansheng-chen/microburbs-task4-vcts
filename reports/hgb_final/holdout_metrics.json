@@ -1,0 +1,29 @@
+{
+  "team": "vcts",
+  "versions": {
+    "python": "3.14.6",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "scikit_learn": "1.9.1"
+  },
+  "holdout": {
+    "train_start": "2025-07-01",
+    "feature_origin": "2026-05-01",
+    "train_n": 11783,
+    "window_n": 4083,
+    "scored_n": 3956,
+    "unknown_parking_excluded": 127,
+    "MedAE_AUD_per_week": 47.58179498789133,
+    "within_100_fraction": 0.7656723963599595,
+    "r2": 0.8429723132602255
+  },
+  "final": {
+    "info_cutoff": "2026-07-31",
+    "train_start": "2025-10-01",
+    "train_n": 12209,
+    "available_prior_ads": 112457,
+    "rows": 65777,
+    "pairs_with_lower_predicted_rent_with_parking": 1618,
+    "csv_sha256": "ecfc32c8a28850d4b248cd7d581070db4a617b20bbfe78363b7c2390b5ac0cc2"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "model": "HistGradientBoostingRegressor",
+  "params": {
+    "loss": "absolute_error",
+    "max_leaf_nodes": 63,
+    "min_samples_leaf": 30,
+    "learning_rate": 0.04,
+    "max_iter": 400,
+    "l2_regularization": 1,
+    "categorical_features": [
+      "suburb",
+      "property_type"
+    ],
+    "early_stopping": false,
+    "random_state": 42
+  },
+  "use_history": true,
+  "use_transit": false,
+  "history_features": [
+    "prior_flat_rent",
+    "days_since_ad",
+    "building_rent_365d",
+    "building_n_365d"
+  ],
+  "three_fold_mean_MedAE": 47.82048736138889,
+  "three_fold_mean_within_100_pct": 76.33036826196835,
+  "three_fold_mean_R2": 0.8682877682405244,
+  "holdout_evaluated": false
+}
