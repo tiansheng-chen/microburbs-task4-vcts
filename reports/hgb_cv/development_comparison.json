@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "comparison": "Complete model pipelines on the same March-April 2026 development adverts",
+  "interpretation": "This is a comparison of complete pipelines, not an isolated ablation of rental-history features. The history-enabled HGB also uses different learning rate, iteration count and maximum leaves from the basic HGB. These development results are not final local holdout results or official hidden-test scores.",
+  "source_context": "Source filenames are relative to the team's working repository. Only aggregate results are reproduced here; no supplied input records or per-advert predictions are included.",
+  "cohort": {
+    "train_start": "2025-05-01",
+    "train_end": "2026-02-28",
+    "train_n": 12387,
+    "validation_start": "2026-03-01",
+    "validation_end": "2026-04-30",
+    "validation_window_n": 2010,
+    "n": 1917,
+    "unknown_advert_parking_excluded": 93,
+    "parking_rule": "Local proxy: score adverts whose observed car_space is 0 or 1; do not substitute a later property snapshot.",
+    "key_columns": ["gnaf_id", "listing_date"],
+    "validation_keys_sha256": "0beb0a15e47e1aded0f15d1ad525fdfa37f3ad347cf49f0a3085ff05b78fd178"
+  },
+  "models": [
+    {
+      "id": "grouped_median",
+      "experiment": "A_median",
+      "name": "Grouped median baseline",
+      "n": 1917,
+      "median_absolute_error": 100.0,
+      "within_100_fraction": 0.5571205007824727,
+      "r2": 0.6620785310137048,
+      "validation_keys_sha256": "0beb0a15e47e1aded0f15d1ad525fdfa37f3ad347cf49f0a3085ff05b78fd178",
+      "parameters": {
+        "minimum_group_size": 10,
+        "fallback_order": ["suburb + bedrooms + car_space", "suburb + bedrooms", "bedrooms", "global"]
+      },
+      "metrics_source": "reports/validation_v2_comparison.csv",
+      "parameter_source": "experiments/a_baseline.py"
+    },
+    {
+      "id": "hgb_basic",
+      "experiment": "B_hgb",
+      "name": "HGB with flat attributes, geography and market time",
+      "n": 1917,
+      "median_absolute_error": 66.77334591392128,
+      "within_100_fraction": 0.6770996348461137,
+      "r2": 0.8026690811349844,
+      "validation_keys_sha256": "0beb0a15e47e1aded0f15d1ad525fdfa37f3ad347cf49f0a3085ff05b78fd178",
+      "parameters": {
+        "loss": "absolute_error",
+        "learning_rate": 0.08,
+        "max_iter": 200,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 30,
+        "l2_regularization": 1,
+        "categorical_features": ["suburb", "property_type"],
+        "early_stopping": false,
+        "random_state": 42
+      },
+      "use_history": false,
+      "use_transit": false,
+      "metrics_source": "reports/validation_v2_comparison.csv",
+      "parameter_source": "experiments/b_hgb.py"
+    },
+    {
+      "id": "hgb_history_selected",
+      "name": "Selected HGB with rental history and tuned settings",
+      "n": 1917,
+      "median_absolute_error": 48.45365539567388,
+      "within_100_fraction": 0.7490871152842984,
+      "r2": 0.8542317115118516,
+      "validation_keys_sha256": "0beb0a15e47e1aded0f15d1ad525fdfa37f3ad347cf49f0a3085ff05b78fd178",
+      "parameters": {
+        "loss": "absolute_error",
+        "learning_rate": 0.04,
+        "max_iter": 400,
+        "max_leaf_nodes": 63,
+        "min_samples_leaf": 30,
+        "l2_regularization": 1,
+        "categorical_features": ["suburb", "property_type"],
+        "early_stopping": false,
+        "random_state": 42
+      },
+      "use_history": true,
+      "use_transit": false,
+      "history_features": ["prior_flat_rent", "days_since_ad", "building_rent_365d", "building_n_365d"],
+      "metrics_source": "reports/hgb_cv/hgb_selected_cv.csv",
+      "metrics_source_section": "fold=3",
+      "parameter_source": "reports/hgb_cv/hgb_selected_config.json",
+      "parameter_source_section": "params"
+    }
+  ]
+}

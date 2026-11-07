@@ -17,5 +17,6 @@
 /reports/hgb_cv/*
 !/reports/hgb_cv/hgb_selected_config.json
 !/reports/hgb_cv/hgb_selected_cv.csv
+!/reports/hgb_cv/development_comparison.json
 /reports/hgb_final/*
 !/reports/hgb_final/holdout_metrics.json
